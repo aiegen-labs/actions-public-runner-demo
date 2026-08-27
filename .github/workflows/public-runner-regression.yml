@@ -1,0 +1,36 @@
+name: Public runner regression
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  standard-runner:
+    name: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+    runs-on: ${{ matrix.os }}
+    env:
+      REPOSITORY_VISIBILITY: ${{ github.event.repository.visibility }}
+    steps:
+      - name: Verify runner allocation
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${REPOSITORY_VISIBILITY}" = "public"
+          test "${RUNNER_ENVIRONMENT}" = "github-hosted"
+          printf 'repository=%s visibility=%s os=%s environment=%s\n' \
+            "${GITHUB_REPOSITORY}" \
+            "${REPOSITORY_VISIBILITY}" \
+            "${RUNNER_OS}" \
+            "${RUNNER_ENVIRONMENT}"
