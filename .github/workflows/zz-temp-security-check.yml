@@ -1,13 +1,11 @@
-name: TEMPORARY security check - public repo must not reach production runners
+name: TEMPORARY control - same file on a hosted runner
 
 on:
   workflow_dispatch:
 
 jobs:
   should-never-run:
-    runs-on:
-      group: aiegen-home-production-release
-      labels: [self-hosted, linux, x64, aiegen-home, n100, aiegen-home-builder]
+    runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
-      - run: echo "FAIL: a public repository reached a production runner"
+      - run: echo "control: this workflow parses and dispatches fine"
